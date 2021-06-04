@@ -84,4 +84,52 @@ for k = 0:31
     plot3(x3,y3,z3);
 end
 hold off
-
+%% Однополостный гиперболоид
+u = linspace(-5,5,50);
+v = linspace(0,2*pi,50);
+[U V] = meshgrid(u,v);
+X = cos(V)+U.*cos(V+pi/2);
+Y = sin(V)+U.*sin(V+pi/2);
+Z = U;
+surf(X,Y,Z,'FaceAlpha',0.5);
+hold on;
+for k=0:11
+    a = pi*(2*k+1)/12;
+    x = cos(a)+ u*cos(a+pi/2);
+    y = sin(a)+ u*sin(a+pi/2);
+    z = u;
+    plot3(x,y,z);
+    hold on;
+end
+hold off;
+%% График вращения
+f = @(t) sin(t);
+round_surf(f,-4,4,40);
+%% Линейчатый график
+x_1 = @(t) cos(t);
+y_1 = @(t) sin(t);
+z_1 = @(t) 0;
+x_2 = @(t) cos(t+pi/2);
+y_2 = @(t) sin(t+pi/2);
+z_2 = @(t) 1;
+ruled_surf(x_1,y_1,z_1,x_2,y_2,z_2,-3,3,0,2*pi,40);
+%%
+function p = round_surf(f,a,b,n);
+t = linspace(a,b,n);
+v = linspace(0,2*pi,n);
+[T V] = meshgrid(t,v);
+X = T;
+Z = cos(V).*f(T);
+Y = sin(V).*f(T);
+p = mesh(X,Y,Z);
+end
+%%
+function p = ruled_surf(x_1,y_1,z_1,x_2,y_2,z_2,a,b,c,d,n);
+u = linspace(a,b,n);
+v = linspace(c,d,n);
+[U V] = meshgrid(u,v);
+X = x_1(V) + U.*x_2(V);
+Y = y_1(V) + U.*y_2(V);
+Z = z_1(V) + U.*z_2(V);
+p = mesh(X,Y,Z);
+end
